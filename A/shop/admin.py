@@ -31,7 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('available', 'created')
     list_editable = ('price',)
     prepopulated_fields = {'slug': ('name',)}
-    # raw_id_fields = ('category',)
+    raw_id_fields = ('category',)
     actions = ('make_available',)
 
     def image_tag(self, obj):
