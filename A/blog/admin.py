@@ -8,9 +8,14 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('status', 'user')
     list_editable = ('status',)
     search_fields = ('title', 'body')
-    #prepopulated_fields = {'slug': ('title',)}
 
 
-admin.site.register(Comment)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('body', 'is_reply', 'created', 'updated')
+    list_filter = ('post', 'user', 'reply')
+    list_editable = ('is_reply',)
+    search_fields = ('post', 'body')
+
 admin.site.register(Category)
 admin.site.register(Tag)

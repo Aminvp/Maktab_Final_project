@@ -3,7 +3,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import UserCreationForm, UserChangeForm
 from .models import User
 from django.contrib.auth.models import Group
-# from .models import Profile
 
 
 class UserAdmin(BaseUserAdmin):
@@ -29,17 +28,3 @@ admin.site.unregister(Group)
 
 
 
-
-
-
-
-
-# class ProfileInline(admin.StackedInline):
-#     model = Profile
-#     can_delete = False
-#
-# class ExtendedProfileAdmin(UserAdmin):
-#     inlines = (ProfileInline,)
-#
-# admin.site.unregister(User)
-# admin.site.register(User, ExtendedProfileAdmin)
