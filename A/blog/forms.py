@@ -1,5 +1,6 @@
 from django import forms
-from .models import Post, Category, Comment
+from .models import Post, Comment
+from shop.models import Category
 
 
 class AddPostForm(forms.ModelForm):
@@ -41,10 +42,10 @@ class AddReplyForm(forms.ModelForm):
 class AddCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('title',)
+        fields = ('name',)
 
 
 class EditCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('title',)
+        fields = ('name',)

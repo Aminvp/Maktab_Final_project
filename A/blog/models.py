@@ -5,6 +5,7 @@ import random
 from django.utils.text import slugify
 # from ckeditor_uploader.fields import RichTextUploadingField
 from shop.models import Product
+from shop.models import Category
 
 
 class Tag(models.Model):
@@ -12,16 +13,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Category(models.Model):
-    title = models.CharField(max_length=120)
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse('blog:category_detail', args=[self.id])
 
 
 class Post(models.Model):

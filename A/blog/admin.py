@@ -17,5 +17,9 @@ class CommentAdmin(admin.ModelAdmin):
     list_editable = ('is_reply',)
     search_fields = ('post', 'body')
 
-admin.site.register(Category)
-admin.site.register(Tag)
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    list_filter = ('title',)
+    search_fields = ('title',)
