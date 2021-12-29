@@ -12,6 +12,9 @@ class Store(models.Model):
     status = models.CharField(max_length=20, choices=STATUS, default='pending')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='store')
 
+    def __str__(self):
+        return f'{self.name} - {self.user}'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=120)
@@ -37,6 +40,8 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_products')
+
+
 
     class Meta:
         ordering = ('name', )
