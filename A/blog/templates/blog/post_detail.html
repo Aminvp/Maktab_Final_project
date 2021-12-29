@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_tags %}
+  <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+  {% if request.user.is_authenticated and request.user.id == post.user.id %}
+  <a href="{% url 'blog:post_delete' post.user.id post.id %}">Delete Post</a> |
+  <a href="{% url 'blog:post_edit' post.user.id post.id %}">Edit Post</a>
+  {% endif %}
+  <h3>{{ post.title }}</h3>
+  <img src="{{ post.image.url }}" alt="">
+  <h4>{{ post.user }} | {{ post.created|date }}</h4>
+  <small>{{ post.created|timesince }}</small><hr/>
+  <p>{{ post.body|safe }}</p><hr/>
+
+  {% with total=comments.count %}
+    <p>This post has {{total}} comment{{ total|pluralize }}</p>
+  {% endwith %}<hr>
+
+  {% if request.user.is_authenticated %}
+    <form action="" method="post" novalidate class="col-md-6">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Send" class="btn btn-success">
+    </form>
+  {% else %}
+    <p>only logged in users can send comments</p>
+  {% endif %}<hr>
+
+  {% for comment in comments %}
+    <div class="card bg-dark text-white">
+        <p class="card-header">{{ comment.user }}</p>
+        <p class="card-body">{{ comment.body }}</p>
+        {% if request.user.is_authenticated %}
+        <div class="card-body">
+          <form action="{% url 'blog:add_reply' post.id comment.id %}" method="post">
+            {% csrf_token %}
+            {{ reply.as_p }}
+            <input type="submit" value="Send" class="btn btn-primary">
+          </form>
+        </div>
+        {% else %}
+          <p>you have to login to send reply</p>
+        {% endif %}
+        {% for reply in comment.rcomment.all %}
+          <p class="bg-primary text-white p-3 m-5">{{ reply.user }} <br/> {{ reply.body }}</p>
+        {% endfor %}
+    </div><br/>
+  {% empty %}
+    <p>There is no comment</p>
+  {% endfor %}
+{% endblock %}

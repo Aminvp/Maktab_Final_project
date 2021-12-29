@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+{% for post in all_posts %}
+
+        <div class="col-3">
+    <div class="card border-success text-dark bg-info mb-3" style="width:">
+        <img src="{{ post.image.url }}" class="card-img-top" alt="">
+        <div class="card-body">
+            <h5 class="card-title"><a href="{{ post.get_absolute_url }}" class="btn btn-primary">{{ post.title }}</a></h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="{% url 'accounts:dashboard' post.user.id %}" class="btn btn-primary center">{{ post.user }}</a>
+
+        </div>
+    </div>
+            </div>
+{% endfor %}
+   </div>
+    </div>
+
+<!--    <div class="card my-3">-->
+<!--        {% for post in all_posts %}-->
+<!--        <div class="card-body">-->
+<!--            <a href="{% url 'accounts:dashboard' post.user.id %}" class="card-header">{{ post.user }}</a>-->
+<!--            <a href="{{ post.get_absolute_url }}" class="card-body">{{ post.title }}</a>-->
+<!--            <hr>-->
+<!--        </div>-->
+<!--        {% endfor %}-->
+<!--    </div>-->
+
+{% endblock %}

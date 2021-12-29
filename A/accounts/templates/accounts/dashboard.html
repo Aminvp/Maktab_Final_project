@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ user.username }} Profile {% endblock %}
+
+{% block content %}
+    {% if self_dash %}
+    <a href="{% url 'blog:add_post' request.user.id %}">Add Post</a>
+    {% endif %}
+    <h4 class="text-center">{{ user.username|capfirst }}</h4>
+    <p class="text-center">{{ user.profile.bio }}</p>
+    {% for post in posts %}
+        <div class="card my-3">
+            <div class="card-body"><a href="{{ post.get_absolute_url }}">{{ post.body|safe }}</a></div>
+        </div>
+    {% empty %}
+        <h6>This user has no posts</h6>
+    {% endfor %}
+{% endblock %}
