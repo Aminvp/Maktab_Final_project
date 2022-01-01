@@ -5,7 +5,16 @@ import random
 from django.utils.text import slugify
 # from ckeditor_uploader.fields import RichTextUploadingField
 from shop.models import Product
-from shop.models import Category
+
+
+class Category(models.Model):
+    title = models.CharField(max_length=120)
+
+    def get_absolute_url(self):
+        return reverse('blog:category_detail', kwargs={'id': self.id})
+
+    def __str__(self):
+        return self.title
 
 
 class Tag(models.Model):
@@ -30,7 +39,7 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS, default='draft')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='posts')
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='post')
 
     def __str__(self):
         return f'{self.user}-{self.title}'

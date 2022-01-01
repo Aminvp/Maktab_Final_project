@@ -23,3 +23,10 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('title',)
     list_filter = ('title',)
     search_fields = ('title',)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    list_filter = ('title',)
+    search_fields = ('title',)

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from .models import Post, Category, Comment
+from .models import Post, Comment, Category
 from .forms import AddPostForm, EditPostForm, AddCommentForm, AddReplyForm, AddCategoryForm, EditCategoryForm
 from django.contrib import messages
 from django.utils.text import slugify
@@ -103,7 +103,7 @@ def all_category(request):
 
 def category_detail(request, id):
     category = Category.objects.get(id=id)
-    post = category.post.all()
+    post = category.post_set.all()
     return render(request, 'blog/category_detail.html', {'category': category, 'post':post})
 
 
@@ -126,8 +126,7 @@ def category_edit(request, category_id):
     if request.method == 'POST':
         form = EditCategoryForm(request.POST, instance=category)
         if form.is_valid():
-            ep = form.save(commit=False)
-            ep.save()
+            form.save()
             messages.success(request, 'your category edited successfully', 'success')
             return redirect('blog:all_category')
     else:
