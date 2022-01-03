@@ -9,6 +9,7 @@ from shop.models import Product
 
 class Category(models.Model):
     title = models.CharField(max_length=120)
+    slug = models.CharField(max_length=120, unique=True)
 
     def get_absolute_url(self):
         return reverse('blog:category_detail', kwargs={'id': self.id})
@@ -30,7 +31,7 @@ class Post(models.Model):
         ('publish', 'Publish')
     )
     title = models.CharField(max_length=120)
-    slug = models.SlugField(max_length=120, unique=True, blank=True, allow_unicode=True)
+    slug = models.SlugField(max_length=120, unique=True, null=True, blank=True, allow_unicode=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     tag = models.ManyToManyField(Tag)
     category = models.ManyToManyField(Category)

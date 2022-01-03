@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import User
 from blog.models import Post
 from django.contrib.auth.decorators import login_required
+from shop.models import Product, Store
 
 
 def user_login(request):
@@ -62,6 +63,13 @@ def user_dashboard(request, id):
     if request.user.id == id:
         self_dash = True
     return render(request, 'accounts/dashboard.html', {'user': user, 'posts': posts, 'self_dash': self_dash})
+
+
+def user_panel(request, id):
+    user = get_object_or_404(User, id=id)
+    store = Store.objects.filter(user=user)
+    products = Product.objects.filter(store=store)
+    return render(request, 'accounts/panel.html', {'user': user, 'store': store, 'products': products})
 
 
 
