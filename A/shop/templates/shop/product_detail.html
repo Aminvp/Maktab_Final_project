@@ -3,6 +3,9 @@
 {% block title %} Product {% endblock %}
 
 {% block content %}
+    {% if request.user.is_authenticated and request.user.id == store.user.id %}
+    <a href="{% url 'shop:edit_product' request.user.id store.id product.id %}">EditProduct</a>
+    {% endif %}
     <h3>{{ product.name }}</h3>
     <smal>{{ product.created }}</smal><h6>{{ product.price }} Toman</h6><br />
     <img src="{{ product.image.url }}" width="400px" height="400px">

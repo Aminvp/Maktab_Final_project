@@ -21,14 +21,18 @@
     <div class="row">
     {% for product in products %}
         <div class="col-3">
-        <div class="card border-success text-dark bg-info mb-3" style="width:18rem, display:inline-block">
-            <img src="{{ product.image.url }}" class="card-img-top" alt="..." width="300px" height="250px">
+            <div class="card border-success text-white bg-success mb-3" style="width:18rem, display:inline-block">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="..." width="300px" height="250px">
             <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
-                <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Detail Product</a>
             </div>
-        </div>
+                <div class="card-body">
+                <a href="{{ product.get_absolute_url }}" class="card-link">Detail Product</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+            </div>
         </div>
     {% endfor %}
     </div>
 {% endblock %}
+

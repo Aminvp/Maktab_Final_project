@@ -3,15 +3,20 @@
 {% block title %} {{ user.full_name }} {{ store.name }} Panel {% endblock %}
 
 {% block content %}
+    <a href="{% url 'shop:add_product'  request.user.id store.id %}" class="my-5">AddProduct</a>
+    <div class="row">
     {% for product in products %}
-        <div class="card" style="width:18rem; display:inline-block">
+        <div class="col-3">
+        <div class="card border-success text-dark bg-info mb-3" style="width:18rem, display:inline-block">
             <img src="{{ product.image.url }}" class="card-img-top" alt="..." width="300px" height="250px">
             <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
                 <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Go somewhere</a>
             </div>
         </div>
+        </div>
     {% empty %}
         <h6>This user has no products</h6>
     {% endfor %}
+    </div>
 {% endblock %}

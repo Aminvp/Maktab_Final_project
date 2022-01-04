@@ -67,7 +67,7 @@ def user_dashboard(request, id):
 
 def user_panel(request, id):
     user = get_object_or_404(User, id=id)
-    store = Store.objects.filter(user=user)
+    store = Store.objects.get(user=user)
     products = Product.objects.filter(store=store)
     return render(request, 'accounts/panel.html', {'user': user, 'store': store, 'products': products})
 

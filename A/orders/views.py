@@ -113,7 +113,7 @@ def coupon_apply(request, order_id):
             order.save()
             return redirect('orders:detail', order_id)
         except Coupon.DoesNotExist:
-            messages.error(request, 'This coupon does not exist', 'warning')
+            messages.warning(request, 'This coupon does not exist', 'warning')
             return redirect('orders:detail', order_id)
 
 
