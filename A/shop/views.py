@@ -41,6 +41,12 @@ def add_store(request, id):
         return redirect('shop:home')
 
 
+# @login_required(login_url='accounts:user_login')
+# def remove_store(request, id, store_id):
+#     if request.user.id == id:
+
+
+
 @login_required(login_url='accounts:user_login')
 def add_product(request, id, store_id):
     if request.user.id == id:
