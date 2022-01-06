@@ -11,13 +11,14 @@ def detail(request):
 
 
 @require_POST
-def cart_add(request, product_id):
+def cart_add(request, store_id, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
+    store = get_object_or_404(Store, id=store_id)
     form = CartAddForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
-        cart.add(product=product, quantity=cd['quantity'])
+        cart.add(product=product, quantity=cd['quantity'], store=store)
     return redirect('cart:detail')
 
 

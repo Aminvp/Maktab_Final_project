@@ -10,7 +10,6 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
     discount = models.IntegerField(blank=True, null=True, default=None)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_orders', null=True, blank=True)
 
     class Meta:
         ordering = ('-created',)
@@ -32,6 +31,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items')
     price = models.IntegerField()
     quantity = models.PositiveSmallIntegerField(default=1)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_orderitem', null=True, blank=True)
 
     def __str__(self):
         return str(self.id)

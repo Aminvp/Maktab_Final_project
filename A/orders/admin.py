@@ -9,12 +9,12 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'order', 'product', 'price', 'quantity')
+    list_display = ('id', 'order', 'product', 'price', 'quantity', 'store')
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'created', 'updated', 'paid', 'store')
+    list_display = ('id', 'user', 'created', 'updated', 'paid')
     list_filter = ('paid',)
     inlines = (OrderItemInline,)
 
