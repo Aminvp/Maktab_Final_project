@@ -3,7 +3,12 @@
 {% block title %} {{ user.full_name }} {{ store.name }} Panel {% endblock %}
 
 {% block content %}
-    <a href="{% url 'shop:add_product'  request.user.id store.id %}" class="my-5">AddProduct</a>
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'shop:add_product'  request.user.id store.id %}" class="btn btn-success">AddProduct</a>
+        <a href="{% url 'orders:orders_list'  request.user.id store.id %}" class="btn btn-primary">OrderList</a>
+        <a href="{% url 'shop:remove_store' request.user.id store.id %}" class="btn btn-warning">Remove/Edit Store</a>
+    </div>
+    <hr>
     <div class="row">
     {% for product in products %}
         <div class="col-3">

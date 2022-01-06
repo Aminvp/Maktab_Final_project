@@ -20,6 +20,7 @@
     <br /><br />
     <div class="row">
     {% for product in products %}
+    {% if product.store.status == 'confirmed' %}
         <div class="col-3">
             <div class="card border-success text-dark bg-white mb-3" style="width:18rem, display:inline-block">
                 <img src="{{ product.image.url }}" class="card-img-top" alt="..." width="300px" height="250px">
@@ -35,6 +36,7 @@
             </div>
             </div>
         </div>
+    {% endif %}
     {% endfor %}
     </div>
 {% endblock %}

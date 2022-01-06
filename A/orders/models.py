@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from shop.models import Product
+from shop.models import Product, Store
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -10,6 +10,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
     discount = models.IntegerField(blank=True, null=True, default=None)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_orders', null=True, blank=True)
 
     class Meta:
         ordering = ('-created',)

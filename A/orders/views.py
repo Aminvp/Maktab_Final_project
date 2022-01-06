@@ -3,6 +3,8 @@ import requests
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from accounts.models import User
+from shop.models import Store
 from .models import Order, OrderItem, Coupon
 from cart.cart import Cart
 from decimal import Decimal
@@ -22,6 +24,7 @@ def detail(request, order_id):
 @login_required(login_url='accounts:user_login')
 def order_create(request):
     cart = Cart(request)
+    user = User.objects.get(id=request.user.id)
     order = Order.objects.create(user=request.user)
     for item in cart:
         OrderItem.objects.create(order=order, product=item['product'], price=Decimal(item['price']), quantity=item['quantity'])
@@ -29,75 +32,15 @@ def order_create(request):
     return redirect('orders:detail', order.id)
 
 
-MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
-ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
-ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
-description = "پرداخت ایران کالا"
-mobile = '09123456789'
-CallbackURL = 'http://localhost:8000/orders/verify/'
-
-
 @login_required(login_url='accounts:user_login')
-def payment(request, order_id, price):
-    global amount, o_id
-    amount = price
-    o_id = order_id
-    req_data = {
-        "merchant_id": MERCHANT,
-        "amount": amount,
-        "callback_url": CallbackURL,
-        "description": description,
-        "metadata": {"mobile": mobile, "email": request.user.email}
-    }
-    req_header = {"accept": "application/json",
-                  "content-type": "application/json'"}
-    req = requests.post(url=ZP_API_REQUEST, data=json.dumps(
-        req_data), headers=req_header)
-    authority = req.json()['data']['authority']
-    if len(req.json()['errors']) == 0:
-        return redirect(ZP_API_STARTPAY.format(authority=authority))
+def orders_list(request, id, store_id):
+    if request.user.id == id:
+        user = User.objects.get(id=id)
+        store = Store.objects.get(id=store_id)
+        orders = store.store_orders.all()
+        return render(request, 'orders/orders_list.html', {'user': user, 'store': store, 'orders': orders})
     else:
-        e_code = req.json()['errors']['code']
-        e_message = req.json()['errors']['message']
-        return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
-
-
-@login_required(login_url='accounts:user_login')
-def verify(request):
-    t_status = request.GET.get('Status')
-    t_authority = request.GET['Authority']
-    if request.GET.get('Status') == 'OK':
-        req_header = {"accept": "application/json",
-                      "content-type": "application/json'"}
-        req_data = {
-            "merchant_id": MERCHANT,
-            "amount": amount,
-            "authority": t_authority
-        }
-        req = requests.post(url=ZP_API_VERIFY, data=json.dumps(req_data), headers=req_header)
-        if len(req.json()['errors']) == 0:
-            t_status = req.json()['data']['code']
-            if t_status == 100:
-                order = Order.objects.get(id=o_id)
-                order.paid = True
-                order.save()
-                messages.success(request, 'Transaction was successfully', 'success')
-                return redirect('shop:home')
-            elif t_status == 101:
-                return HttpResponse('Transaction submitted : ' + str(
-                    req.json()['data']['message']
-                ))
-            else:
-                return HttpResponse('Transaction failed.\nStatus: ' + str(
-                    req.json()['data']['message']
-                ))
-        else:
-            e_code = req.json()['errors']['code']
-            e_message = req.json()['errors']['message']
-            return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
-    else:
-        return HttpResponse('Transaction failed or canceled by user')
+        return redirect('shop:home')
 
 
 @require_POST
