@@ -26,7 +26,7 @@ def order_create(request):
     cart = Cart(request)
     order = Order.objects.create(user=request.user)
     for item in cart:
-        OrderItem.objects.create(order=order, product=item['product'], price=Decimal(item['price']), quantity=item['quantity'])
+        OrderItem.objects.create(order=order, product=item['product'], price=Decimal(item['price']), quantity=item['quantity'], store=item['store'])
     cart.clear()
     return redirect('orders:detail', order.id)
 
@@ -36,8 +36,8 @@ def orders_list(request, id, store_id):
     if request.user.id == id:
         user = User.objects.get(id=id)
         store = Store.objects.get(id=store_id)
-        orders = store.store_orderitem.all()
-        return render(request, 'orders/orders_list.html', {'user': user, 'store': store, 'orders': orders})
+        orderitem = store.store_orderitem.all()
+        return render(request, 'orders/orders_list.html', {'user': user, 'store': store, 'orderitem': orderitem})
     else:
         return redirect('shop:home')
 

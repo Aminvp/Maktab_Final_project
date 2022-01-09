@@ -7,22 +7,22 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Email</th>
-            <th scope="col">Created</th>
-            <th scope="col">Updated</th>
-            <th scope="col">Status</th>
-            <th scope="col">Coupon</th>
+            <th scope="col">Order</th>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">quantity</th>
+            <th scope="col">Store</th>
         </tr>
     </thead>
     <tbody>
-        {% for ord in orders %}
+        {% for ord in orderitem %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ ord.user }}</td>
-            <td>{{ ord.created }}</td>
-            <td>{{ ord.updated }}</td>
-            <td>{{ ord.paid }}</td>
-            <td>{{ ord.discount }} %</td>
+            <td>{{ ord.order }}</td>
+            <td>{{ ord.product }}</td>
+            <td>{{ ord.price }}</td>
+            <td>{{ ord.quantity }}</td>
+            <td>{{ ord.store }} %</td>
         </tr>
         {% endfor %}
     </tbody>

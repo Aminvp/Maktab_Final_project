@@ -13,16 +13,22 @@ class Cart:
 		self.cart = cart
 
 	def __iter__(self):
+		global product
 		product_ids = self.cart.keys()
 		products = Product.objects.filter(id__in=product_ids)
-		print(product_ids)
-		print(products)
-		print( '***************')
+		stores = Store.objects.filter(id__in=product_ids)
 		cart = self.cart.copy()
+		print(cart)
+		print('*'*50)
 		for product in products:
 			cart[str(product.id)]['product'] = product
-		# for store in stores:
-		# 	cart[str(product.id)]['store'] = store
+			for store in stores:
+				cart[str(product.id)]['store'] = store
+		print(cart)
+		print('*'*50)
+
+		print(cart)
+		print('*'*50)
 
 		for item in cart.values():
 			item['total_price'] = int(item['price']) * item['quantity']

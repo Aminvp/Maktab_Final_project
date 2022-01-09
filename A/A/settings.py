@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'sorl.thumbnail',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
