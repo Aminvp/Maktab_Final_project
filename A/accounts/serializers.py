@@ -23,7 +23,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'password')
+        fields = ('email', 'password', 'objects')
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -41,7 +41,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class ProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('id', 'bio', 'age', 'image')
+        fields = '__all__'
 
 
 class ProfileDetailSerializer(serializers.ModelSerializer):

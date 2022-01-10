@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User, Profile
 from django.contrib.auth import authenticate, login
+from rest_framework.permissions import IsAuthenticated
+from permissions import IsOwnerOrReadOnly
 
 
 class UserListView(APIView):
@@ -25,8 +27,8 @@ class UserRegisterView(APIView):
 class UserLoginView(APIView):
     def post(self, request):
         data = UserLoginSerializer(data=request.data)
+        print('*' * 54)
         if data.is_valid():
-            print('*'*50)
             email = data.validated_data['email']
             password = data.validated_data['password']
             user = authenticate(request, email=email, password=password)
@@ -78,6 +80,8 @@ class ProfileDetailView(APIView):
 
 
 class ProfileCreateView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
     def post(self, request):
         srz_data = ProfileCreateSerializer(data=request.data)
         if srz_data.is_valid():
@@ -87,8 +91,11 @@ class ProfileCreateView(APIView):
 
 
 class ProfileUpdateView(APIView):
+    permission_classes = [IsOwnerOrReadOnly, ]
+
     def post(self, request, pk):
         profile = Profile.objects.get(pk=pk)
+        self.check_object_permissions(request, profile)
         srz_data = ProfileUpdateSerializer(instance=profile, data=request.data, partial=True)
         if srz_data.is_valid():
             srz_data.save()
