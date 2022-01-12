@@ -16,14 +16,14 @@ class Cart:
 		global product
 		product_ids = self.cart.keys()
 		products = Product.objects.filter(id__in=product_ids)
-		stores = Store.objects.filter(id__in=product_ids)
+		# stores = Store.objects.filter(id__in=product_ids)
 		cart = self.cart.copy()
 		print(cart)
 		print('*'*50)
 		for product in products:
 			cart[str(product.id)]['product'] = product
-			for store in stores:
-				cart[str(product.id)]['store'] = store
+		# for store in stores:
+		# 	cart[str(product.id)]['store'] = store
 		print(cart)
 		print('*'*50)
 

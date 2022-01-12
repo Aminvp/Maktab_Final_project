@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
+    products = models.ManyToManyField(Product, through='OrderItem')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
@@ -31,7 +32,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items')
     price = models.IntegerField()
     quantity = models.PositiveSmallIntegerField(default=1)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_orderitem', null=True, blank=True)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_orderitem')
 
     def __str__(self):
         return str(self.id)
