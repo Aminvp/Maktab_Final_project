@@ -1,6 +1,13 @@
 from .models import Order, OrderItem
+from accounts.models import User
 from shop.models import Product
 from rest_framework import serializers
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -20,16 +27,17 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('user', 'products',)
+        fields = ('user', 'products')
 
     def create(self, validated_data):
-        # validated_data['user'] = self.context['request'].user
-        # instance = Order.objects.create(**validated_data)
-        # instance.save()
-        print(25*'*')
-        print(validated_data)
-        print(25*'*')
-        return 'hello'
+        order = Order.objects.create()
+        return o.id
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
 
 
 class OrderItemListSerializer(serializers.ModelSerializer):

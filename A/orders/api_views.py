@@ -24,12 +24,11 @@ class OrderView(APIView):
 
 class OrderIdView(APIView):
     def post(self, request):
-        user = request.user
-        # product = Product.objects.get(id=product_id)
-        # order = Order.objects.create(user=user, products=product)
         srz_order = OrderCreateSerializer(data=request.data)
+        data = {}
         if srz_order.is_valid():
             srz_order.save()
+            data["success"] = "Order Added"
             return Response(srz_order.data, status=status.HTTP_201_CREATED)
         return Response(srz_order.errors, status=status.HTTP_400_BAD_REQUEST)
 

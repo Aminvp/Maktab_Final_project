@@ -8,18 +8,14 @@ app_name = 'accounts'
 
 
 api_urls = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('users/', api_views.UserListView.as_view()),
-    path('users/register/', api_views.UserRegisterView.as_view()),
-    path('users/login/', api_views.UserLoginView.as_view()),
-    path('users/detail/<int:pk>/', api_views.UserDetailView.as_view()),
-    path('users/update/<int:pk>/', api_views.UserUpdateView.as_view()),
-    path('users/delete/<int:pk>/', api_views.UserDeleteView.as_view()),
-    path('users/profiles/', api_views.ProfileListView.as_view()),
-    path('users/profiles/detail/<int:pk>/', api_views.ProfileDetailView.as_view()),
-    path('users/profiles/create/', api_views.ProfileCreateView.as_view()),
-    path('users/profiles/update/<int:pk>/', api_views.ProfileUpdateView.as_view()),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('users/login/', api_views.MyObtainTokenPairView.as_view(), name='token_obtain_pair'),
+    path('users/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('users/', api_views.UserView.as_view(), name='api_user_register'),
+    path('users/<int:pk>/', api_views.UserIdView.as_view(), name='api_user_update'),
+    path('users/profiles/', api_views.ProfileView.as_view(), name='api_profile_create'),
+    path('users/profiles/<int:pk>/', api_views.ProfileIdView.as_view(), name='api_profile_update'),
 ]
 
 urlpatterns = [
