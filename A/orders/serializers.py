@@ -26,12 +26,12 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True)
 
     class Meta:
-        model = Order
-        fields = ('user', 'products')
+        model = OrderItem
+        fields = ('product',)
 
     def create(self, validated_data):
-        order = Order.objects.create()
-        return o.id
+        order = Order.objects.create(**validated_data)
+        return order
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
