@@ -23,14 +23,31 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True)
 
     class Meta:
-        model = OrderItem
-        fields = ('product',)
+        model = Order
+        fields = ('user', 'products', )
 
     def create(self, validated_data):
         order = Order.objects.create(**validated_data)
+        return order
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+
+class OrderUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+    def create(self, validate_data):
+        order = Order.objects.create(**validate_data)
         return order
 
 

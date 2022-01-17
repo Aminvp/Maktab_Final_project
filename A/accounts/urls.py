@@ -24,6 +24,8 @@ urlpatterns = [
     path('logout/', views.user_logout, name='user_logout'),
     path('dashboard/<int:id>/', views.user_dashboard, name='dashboard'),
     path('panel/<int:id>/', views.user_panel, name='panel'),
+    path('phone_login/', views.phone_login, name='phone_login'),
+    path('verify/', views.verify, name='verify'),
     path('api/', include(api_urls)),
 ]
 

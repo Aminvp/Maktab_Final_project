@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from accounts.views import user_register, user_dashboard, user_login, user_logout, user_panel
-from accounts.api_views import UserView, UserLoginView, UserIdView, ProfileView, ProfileIdView
+from accounts.api_views import UserView, MyObtainTokenPairView, UserIdView, ProfileView, ProfileIdView
 
 
 class TestUrls(SimpleTestCase):
@@ -30,8 +30,8 @@ class TestUrls(SimpleTestCase):
         self.assertEqual(resolve(url).func.view_class, UserView)
 
     def test_api_user_login(self):
-        url = reverse('accounts:api_user_login')
-        self.assertEqual(resolve(url).func.view_class, UserLoginView)
+        url = reverse('accounts:token_obtain_pair')
+        self.assertEqual(resolve(url).func.view_class, MyObtainTokenPairView)
 
     def test_api_user_update(self):
         url = reverse('accounts:api_user_update', args=[5])

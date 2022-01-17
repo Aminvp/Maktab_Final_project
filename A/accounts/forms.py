@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Profile
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
@@ -76,4 +76,43 @@ class UserRegistrationForm(forms.Form):
         if p1 and p2:
             if p1 != p2:
                 raise forms.ValidationError('passwords must match')
+
+
+class PhoneLoginForm(forms.Form):
+    phone = forms.DecimalField(max_digits=12, decimal_places=0, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Your Phone Number'}))
+
+    def clean_phone(self):
+        phone = Profile.objects.filter(phone=self.cleaned_data['phone'])
+        if not phone.exists():
+            raise forms.ValidationError('This phone number does not exists')
+        return self.cleaned_data['phone']
+
+
+class VerifyCodeForm(forms.Form):
+    code = forms.DecimalField(max_digits=12, decimal_places=0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

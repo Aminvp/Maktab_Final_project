@@ -11,10 +11,13 @@ def detail(request):
 
 
 @require_POST
-def cart_add(request, store_id, product_id):
+def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
-    store = get_object_or_404(Store, id=store_id)
+    store = product.store
+    print('*'*100)
+    print(store)
+    print('*'*100)
     form = CartAddForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data

@@ -6,7 +6,7 @@ app_name = 'orders'
 
 api_urls = [
     path('orders/', api_views.OrderView.as_view()),
-    path('orders/create/', api_views.OrderIdView.as_view()),
+    path('orders/<int:order_id>/', api_views.OrderIdView.as_view()),
     path('orderitems/', api_views.OrderItemView.as_view()),
 ]
 
