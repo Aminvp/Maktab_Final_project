@@ -18,11 +18,11 @@
         {% for ord in orderitem %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ ord.order }}</td>
+            <td><a href="{% url 'orders:order_detail' request.user.id store.id %}">{{ ord.order }}</a></td>
             <td>{{ ord.product }}</td>
             <td>{{ ord.price }}</td>
             <td>{{ ord.quantity }}</td>
-            <td>{{ ord.store }} %</td>
+            <td>{{ ord.store }}</td>
         </tr>
         {% endfor %}
     </tbody>

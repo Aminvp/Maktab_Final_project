@@ -42,6 +42,21 @@ def orders_list(request, id, store_id):
         return redirect('shop:home')
 
 
+@login_required(login_url='accounts:user_login')
+def order_detail(request, id, store_id):
+    if request.user.id == id:
+        user = User.objects.get(id=id)
+        store = Store.objects.get(id=store_id)
+        orderitem = OrderItem.objects.filter(store=store)
+        return render(request, 'orders/order_detail.html', {'user': user, 'store': store, 'orderitem': orderitem})
+    else:
+        return redirect('shop:home')
+
+
+def status(request):
+    pass
+
+
 @require_POST
 def coupon_apply(request, order_id):
     now = timezone.now()

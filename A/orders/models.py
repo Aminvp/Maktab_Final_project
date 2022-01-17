@@ -5,11 +5,17 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Order(models.Model):
+    STATUS = (
+        ('pending', 'Pending'),
+        ('canceled', 'Canceled'),
+        ('confirmed', 'Confirmed'),
+        ('paid', 'Paid')
+    )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     products = models.ManyToManyField(Product, through='OrderItem', related_name='orders')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS, default='pending')
     discount = models.IntegerField(blank=True, null=True, default=None)
 
     class Meta:

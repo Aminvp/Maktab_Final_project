@@ -14,8 +14,8 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'created', 'updated', 'paid', 'discount')
-    list_filter = ('paid',)
+    list_display = ('id', 'user', 'created', 'updated', 'status', 'discount')
+    list_filter = ('status',)
     inlines = (OrderItemInline,)
 
 

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} OrderDetail {% endblock %}
+
+{% block js_files %}
+    <script src="{% static 'orders/js/script.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<table class="table table-success table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
+            <th scope="col">Created</th>
+            <th scope="col">Updated</th>
+            <th scope="col">paid</th>
+            <th scope="col">discount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ord in orderitem %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ ord.order.user }}</td>
+            <td>{{ ord.order.created }}</td>
+            <td>{{ ord.order.updated }}</td>
+            {% if ord.order.status == 'pending' %}
+            <td><button  class="btn btn-success">Pending</button></td>
+            {% else ord.order.status == 'confirmed' %}
+            <td><button class="btn btn-success">Confirmed</button></td>
+            {% endif %}
+            <td>{{ ord.order.discount }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
