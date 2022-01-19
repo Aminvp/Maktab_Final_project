@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from accounts.models import User
+from django.utils.text import slugify
 
 
 class Store(models.Model):
@@ -34,6 +35,10 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('shop:category_filter', args=[self.slug])
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class Product(models.Model):
     category = models.ManyToManyField(Category, related_name='products')
@@ -55,6 +60,16 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop:product_detail', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+
+
+
+
+
 
 
 

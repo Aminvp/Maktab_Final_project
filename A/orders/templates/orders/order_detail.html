@@ -26,11 +26,7 @@
             <td>{{ ord.order.user }}</td>
             <td>{{ ord.order.created }}</td>
             <td>{{ ord.order.updated }}</td>
-            {% if ord.order.status == 'pending' %}
-            <td><button  class="btn btn-success">Pending</button></td>
-            {% else ord.order.status == 'confirmed' %}
-            <td><button class="btn btn-success">Confirmed</button></td>
-            {% endif %}
+            <td>{{ ord.order.status }}</td>
             <td>{{ ord.order.discount }}</td>
         </tr>
         {% endfor %}

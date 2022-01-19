@@ -12,6 +12,7 @@ from django.contrib import messages
 from .forms import CouponForm
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+from django.http import JsonResponse
 
 
 @login_required(login_url='accounts:user_login')
@@ -51,10 +52,6 @@ def order_detail(request, id, store_id):
         return render(request, 'orders/order_detail.html', {'user': user, 'store': store, 'orderitem': orderitem})
     else:
         return redirect('shop:home')
-
-
-def status(request):
-    pass
 
 
 @require_POST

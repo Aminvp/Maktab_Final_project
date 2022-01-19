@@ -7,72 +7,80 @@ from .models import User, Profile
 from blog.models import Post
 from django.contrib.auth.decorators import login_required
 from shop.models import Product, Store
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from random import randint
 from kavenegar import *
-from django import forms
 
 
-def user_login(request):
-    next = request.GET.get('next')
-    print(next)
-    if request.method == 'POST':
-        form = UserLoginForm(request.POST)
+
+class UserLogin(View):
+    form_class = UserLoginForm
+    template_name = 'accounts/login.html'
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
+            cd = form.cleaned_data
+            user = authenticate(request, email=cd['email'], password=cd['password'])
             if user is not None:
                 login(request, user)
-                messages.success(request, 'you logged in successfully', 'success')
-                if next:
-                    print(next)
-                    return redirect(next)
+                messages.success(request, 'your logged in successfully', 'info')
                 return redirect('shop:home')
-        else:
-            messages.error(request, 'email or password is wrong', 'danger')
-            return redirect('accounts:user_login')
-    else:
-        form = UserLoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+            messages.error(request, 'email or password is wrong!', 'warning')
+        return render(request, self.template_name, {'form': form})
 
 
-def user_register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+class UserRegister(View):
+    form_class = UserRegistrationForm
+    template_name = 'accounts/register.html'
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             user = User.objects.create_user(cd['email'], cd['full_name'], cd['password1'])
-            user.save()
             login(request, user)
-            messages.success(request, 'you registered successfully', 'success')
+            messages.success(request, 'your registered successfully', 'info')
             return redirect('shop:home')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'accounts/register.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
 
-@login_required(login_url='accounts:user_login')
-def user_logout(request):
-    logout(request)
-    messages.success(request, 'you logged out successfully', 'success')
-    return redirect('shop:home')
+class UserLogout(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        messages.success(request, 'your logged out successfully', 'info')
+        return redirect('shop:home')
 
 
-@login_required(login_url='accounts:user_login')
-def user_dashboard(request, id):
-    user = get_object_or_404(User, id=id)
-    posts = Post.objects.filter(user=user)
-    self_dash = False
-    if request.user.id == id:
-        self_dash = True
-    return render(request, 'accounts/dashboard.html', {'user': user, 'posts': posts, 'self_dash': self_dash})
+class UserDashboard(LoginRequiredMixin, View):
+    template_name = 'accounts/dashboard.html'
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        posts = Post.objects.filter(user=user)
+        self_dash = False
+        if request.user.id == user_id:
+            self_dash = True
+        return render(request, self.template_name, {'user': user, 'posts': posts, 'self_dash': self_dash})
 
 
-def user_panel(request, id):
-    user = get_object_or_404(User, id=id)
-    store = Store.objects.get(user=user)
-    products = Product.objects.filter(store=store)
-    return render(request, 'accounts/panel.html', {'user': user, 'store': store, 'products': products})
+class UserPanel(LoginRequiredMixin, View):
+    template_name = 'accounts/panel.html'
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        store = Store.objects.get(user=user)
+        products = Product.objects.filter(store=store)
+        return render(request, self.template_name, {'user': user, 'store': store, 'products': products})
 
 
 def phone_login(request):
@@ -84,7 +92,7 @@ def phone_login(request):
             rand_num = randint(1000, 9999)
             api = KavenegarAPI('467066542F7547496B7A2F34516745504D7173656E4934762F6F6243726B565A476F556B764D597A6F736F3D')
             params = {'sender': '', 'receptor': phone, 'message': rand_num}
-            response = api.sms_send( params)
+            api.sms_send(params)
             return redirect('accounts:verify')
     else:
         form = PhoneLoginForm()
