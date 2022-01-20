@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .forms import UserLoginForm, UserRegistrationForm, PhoneLoginForm, VerifyCodeForm
+from .forms import UserLoginForm, UserRegistrationForm, PhoneLoginForm, VerifyCodeForm, EditProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import User, Profile
@@ -11,7 +11,6 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from random import randint
 from kavenegar import *
-
 
 
 class UserLogin(View):
@@ -71,6 +70,27 @@ class UserDashboard(LoginRequiredMixin, View):
         if request.user.id == user_id:
             self_dash = True
         return render(request, self.template_name, {'user': user, 'posts': posts, 'self_dash': self_dash})
+
+
+class ProfileEdit(LoginRequiredMixin, View):
+    form_class = EditProfileForm
+    template_name = 'accounts/edit_profile.html'
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        form = self.form_class(instance=request.user.profile, initial={'email': request.user.email, 'full_name': request.user.full_name})
+        return render(request, self.template_name, {'user': user, 'form': form})
+
+    def post(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        form = self.form_class(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            user.email = form.cleaned_data['email']
+            user.full_name = form.cleaned_data['full_name']
+            user.save()
+            messages.success(request, 'your profile edited successfully', 'info')
+            return redirect('accounts:dashboard', user_id)
 
 
 class UserPanel(LoginRequiredMixin, View):

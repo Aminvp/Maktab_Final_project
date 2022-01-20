@@ -4,10 +4,13 @@
 
 {% block content %}
     {% if self_dash %}
-    <a href="{% url 'blog:add_post' request.user.id %}">Add Post</a>
+    <a href="{% url 'blog:add_post' request.user.id %}">Add Post</a> |
+    <a href="{% url 'accounts:edit_profile' request.user.id %}">Edit Profile</a>
     {% endif %}
-    <h4 class="text-center">{{ user.profile.phone|capfirst }}</h4>
+    <h4 class="text-center">{{ user.full_name|capfirst }}</h4>
     <p class="text-center">{{ user.profile.bio }}</p>
+    <div class="text-center"><img src="{{user.profile.image.url}}"></div>
+    <br /> <hr />
     {% for post in posts %}
         <div class="card my-3">
             <div class="card-body"><a href="{{ post.get_absolute_url }}">{{ post.body|safe }}</a></div>

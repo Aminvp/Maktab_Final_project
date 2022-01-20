@@ -78,8 +78,17 @@ class UserRegistrationForm(forms.Form):
                 raise forms.ValidationError('passwords must match')
 
 
+class EditProfileForm(forms.ModelForm):
+    full_name = forms.CharField()
+    email = forms.EmailField()
+
+    class Meta:
+        model = Profile
+        fields = ('bio', 'age', 'image', 'phone')
+
+
 class PhoneLoginForm(forms.Form):
-    phone = forms.DecimalField(max_digits=12, decimal_places=0, widget=forms.TextInput(
+    phone = forms.DecimalField(max_digits=12, decimal_places=0, widget=forms.NumberInput(
         attrs={'class': 'form-control', 'placeholder': 'Enter Your Phone Number'}))
 
     def clean_phone(self):
