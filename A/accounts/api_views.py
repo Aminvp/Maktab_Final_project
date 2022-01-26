@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from .sender import send_otp
 
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserListSerializer, UserUpdateSerializer, \
     UserDetailSerializer, ProfileListSerializer, ProfileDetailSerializer, ProfileCreateSerializer, \
@@ -117,13 +117,8 @@ class RequestOtp(APIView):
             req_otp.channel = serializer.validated_data['channel']
             req_otp.generate_password()
             req_otp.save()
-            # api = KavenegarAPI('467066542F7547496B7A2F34516745504D7173656E4934762F6F6243726B565A476F556B764D597A6F736F3D')
-            # response = api.verify_lookup({
-            #     'receptor': req_otp.phone,
-            #     'token': req_otp.password,
-            #     'template': settings.OTP_TEMPLATE
-            # })
-            # print(response)
+            send_otp(req_otp)
+
             return Response(RequestOtpResponseSerializer(req_otp).data)
 
         else:
