@@ -11,6 +11,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from random import randint
 from kavenegar import *
+import re
 
 
 class UserLogin(View):
@@ -47,7 +48,7 @@ class UserRegister(View):
         if form.is_valid():
             cd = form.cleaned_data
             user = User.objects.create_user(cd['email'], cd['full_name'], cd['password1'])
-            login(request, user)
+            # login(request, user)
             messages.success(request, 'your registered successfully', 'info')
             return redirect('shop:home')
         return render(request, self.template_name, {'form': form})
@@ -66,6 +67,13 @@ class UserDashboard(LoginRequiredMixin, View):
     def get(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
         posts = Post.objects.filter(user=user)
+        if user.phone:
+            if re.search('^(\+98|0098|98|0)?9\d{9}$', user.phone):
+                result = re.finditer('9\d{9}$', user.phone)
+                for number in result:
+                    print('0' + number.group())
+            else:
+                messages.warning(request, 'Your phone number has not been verified, please review it in the profile editing section!', 'warning')
         self_dash = False
         if request.user.id == user_id:
             self_dash = True
@@ -78,7 +86,7 @@ class ProfileEdit(LoginRequiredMixin, View):
 
     def get(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
-        form = self.form_class(instance=request.user.profile, initial={'email': request.user.email, 'full_name': request.user.full_name})
+        form = self.form_class(instance=request.user.profile, initial={'email': request.user.email, 'full_name': request.user.full_name, 'phone': request.user.phone})
         return render(request, self.template_name, {'user': user, 'form': form})
 
     def post(self, request, user_id):
@@ -88,6 +96,7 @@ class ProfileEdit(LoginRequiredMixin, View):
             form.save()
             user.email = form.cleaned_data['email']
             user.full_name = form.cleaned_data['full_name']
+            user.phone = form.cleaned_data['phone']
             user.save()
             messages.success(request, 'your profile edited successfully', 'info')
             return redirect('accounts:dashboard', user_id)

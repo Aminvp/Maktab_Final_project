@@ -36,12 +36,12 @@ class TestView(TestCase):
         self.failIf(response.context['form'].is_valid())
         self.assertFormError(response, 'form', field='email', errors=['Enter a valid email address.'])
 
-    def test_user_dashboard_GET(self):
-        User.objects.create_user(email='hamed@gmail.com', full_name='hamed yazdani', password='12345')
-        self.client.login(email='hamed@gmail.com', password='12345')
-        response = self.client.get(reverse('accounts:dashboard', args=[1, ]))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'accounts/dashboard.html')
+    # def test_user_dashboard_GET(self):
+    #     User.objects.create_user(email='hamed@gmail.com', full_name='hamed yazdani', password='12345')
+    #     self.client.login(email='hamed@gmail.com', password='12345')
+    #     response = self.client.get(reverse('accounts:dashboard', args=[1, ]))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'accounts/dashboard.html')
 
 
 

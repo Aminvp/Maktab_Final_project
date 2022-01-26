@@ -1,11 +1,19 @@
+import random
+import string
+import uuid
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from .managers import MyUserManager
 from django.db.models.signals import post_save
+from .sender import send_otp
 
 
 class User(AbstractBaseUser):
     email = models.EmailField(max_length=120, unique=True)
+    phone = models.CharField(max_length=14, unique=True, null=True, blank=True)
     full_name = models.CharField(max_length=120)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -34,7 +42,6 @@ class Profile(models.Model):
     bio = models.TextField(null=True, blank=True)
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     image = models.ImageField(upload_to='profiles/%Y/%m/%d/', null=True, blank=True)
-    phone = models.DecimalField(max_digits=12, decimal_places=0, null=True, blank=True)
 
     def __str__(self):
         return self.user.email
@@ -47,6 +54,35 @@ def save_profile(sender, **kwargs):
 
 
 post_save.connect(save_profile, sender=User)
+
+
+class OtpRequest(models.Model):
+    class OtpChannel(models.TextChoices):
+        ANDROID = _('Android')
+        IOS = _('ios')
+        WEB = _("Web")
+
+    request_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    channel = models.CharField(_("channel"), max_length=12, choices=OtpChannel.choices)
+    phone = models.CharField(max_length=12)
+    password = models.CharField(max_length=4, null=True)
+    valid_from = models.DateTimeField(default=timezone.now)
+    valid_until = models.DateTimeField(default=timezone.now() + timedelta(seconds=300))
+    receipt_id = models.CharField(max_length=255, null=True)
+
+    def generate_password(self):
+        self.password = self._random_password()
+        self.valid_until = timezone.now() + timedelta(seconds=300)
+
+    def _random_password(self):
+        rand = random.SystemRandom()
+        digits = rand.choices(string.digits, k=4)
+        return ''.join(digits)
+
+    class Meta:
+        verbose_name = _('One Time Password')
+        verbose_name_plural = _('One Time Passwords')
+
 
 
 

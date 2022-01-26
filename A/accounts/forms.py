@@ -56,9 +56,9 @@ class UserRegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        user = User.objects.filter(email=email)
-        if user.exists():
-            raise forms.ValidationError('This email already exists')
+        user = User.objects.filter(email=email).exists()
+        if user:
+            raise ValidationError('This email already exists')
         return email
 
     # def clean_password2(self):
@@ -81,25 +81,25 @@ class UserRegistrationForm(forms.Form):
 class EditProfileForm(forms.ModelForm):
     full_name = forms.CharField()
     email = forms.EmailField()
+    phone = forms.CharField()
 
     class Meta:
         model = Profile
-        fields = ('bio', 'age', 'image', 'phone')
+        fields = ('bio', 'age', 'image')
 
 
 class PhoneLoginForm(forms.Form):
-    phone = forms.DecimalField(max_digits=12, decimal_places=0, widget=forms.NumberInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter Your Phone Number'}))
+    phone = forms.CharField(max_length=12)
 
     def clean_phone(self):
-        phone = Profile.objects.filter(phone=self.cleaned_data['phone'])
+        phone = User.objects.filter(phone=self.cleaned_data['phone'])
         if not phone.exists():
             raise forms.ValidationError('This phone number does not exists')
         return self.cleaned_data['phone']
 
 
 class VerifyCodeForm(forms.Form):
-    code = forms.DecimalField(max_digits=12, decimal_places=0)
+    code = forms.CharField(max_length=4)
 
 
 

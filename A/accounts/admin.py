@@ -1,17 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import UserCreationForm, UserChangeForm
-from .models import User, Profile
+from .models import User, Profile, OtpRequest
 from django.contrib.auth.models import Group
 
 
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('full_name', 'email', 'is_admin', 'is_seller', 'is_customer')
+    list_display = ('full_name', 'email', 'phone', 'is_admin', 'is_seller', 'is_customer')
     list_filter = ('is_admin', 'is_seller', 'is_customer')
     fieldsets = (
-        ('Main', {'fields': ('full_name', 'email', 'password')}),
+        ('Main', {'fields': ('full_name', 'email', 'phone', 'password')}),
         ('Personal info', {'fields': ('is_active', 'is_seller', 'is_customer')}),
         ('Permissions', {'fields': ('is_admin',)})
     )
@@ -39,7 +39,7 @@ class ExtendedProfileAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, ExtendedProfileAdmin)
 
-
+admin.site.register(OtpRequest)
 
 
 

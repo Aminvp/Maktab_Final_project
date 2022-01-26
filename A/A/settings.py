@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'sorl.thumbnail',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'django_filters',
     'drf_yasg',
 ]
@@ -177,8 +179,12 @@ SWAGGER_SETTINGS = {
         ],
 }
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.authenticate.PhoneBackend',
+]
 
-
+LOGIN_URL = '/accounts/login/'
 
 
 

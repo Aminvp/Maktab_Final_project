@@ -16,6 +16,9 @@ api_urls = [
     path('users/<int:pk>/', api_views.UserIdView.as_view(), name='api_user_update'),
     path('users/profiles/', api_views.ProfileView.as_view(), name='api_profile_create'),
     path('users/profiles/<int:pk>/', api_views.ProfileIdView.as_view(), name='api_profile_update'),
+    path('otp/request', api_views.RequestOtp.as_view()),
+    path('otp/verify', api_views.VerifyOtp.as_view()),
+    path('phone/login', api_views.PhoneLogin.as_view()),
 ]
 
 urlpatterns = [

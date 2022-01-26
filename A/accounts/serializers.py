@@ -1,5 +1,6 @@
-from .models import User, Profile
+from .models import User, Profile, OtpRequest
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -69,9 +70,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     @classmethod
@@ -83,6 +81,31 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+class RequestOtpSerializer(serializers.Serializer):
+    phone = serializers.CharField(max_length=12, allow_null=False)
+    channel = serializers.ChoiceField(allow_null=False, choices=['android', 'ios', 'web'])
+
+
+class RequestOtpResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OtpRequest
+        fields = ['request_id']
+
+
+class VerifyOtpSerializer(serializers.Serializer):
+    request_id = serializers.CharField(max_length=64, allow_null=False)
+    phone = serializers.CharField(max_length=12, allow_null=False)
+    password = serializers.CharField(allow_null=False)
+
+
+class VerifyOtpResponseSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    new_user = serializers.BooleanField()
+
+
+class RequestPhoneLoginSerializer(serializers.Serializer):
+    phone = serializers.CharField(max_length=12, allow_null=False)
+    password = serializers.CharField()
 
 
 

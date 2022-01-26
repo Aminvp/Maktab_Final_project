@@ -1,29 +1,29 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from accounts.views import user_register, user_dashboard, user_login, user_logout, user_panel
+from accounts.views import UserRegister, UserLogin, UserLogout, UserDashboard, UserPanel
 from accounts.api_views import UserView, MyObtainTokenPairView, UserIdView, ProfileView, ProfileIdView
 
 
 class TestUrls(SimpleTestCase):
     def test_register(self):
         url = reverse('accounts:user_register')
-        self.assertEqual(resolve(url).func, user_register)
+        self.assertEqual(resolve(url).func.view_class, UserRegister)
 
     def test_login(self):
         url = reverse('accounts:user_login')
-        self.assertEqual(resolve(url).func, user_login)
+        self.assertEqual(resolve(url).func.view_class, UserLogin)
 
     def test_logout(self):
         url = reverse('accounts:user_logout')
-        self.assertEqual(resolve(url).func, user_logout)
+        self.assertEqual(resolve(url).func.view_class, UserLogout)
 
     def test_dashboard(self):
         url = reverse('accounts:dashboard', args=[3])
-        self.assertEqual(resolve(url).func, user_dashboard)
+        self.assertEqual(resolve(url).func.view_class, UserDashboard)
 
     def test_panel(self):
         url = reverse('accounts:panel', args=[2])
-        self.assertEqual(resolve(url).func, user_panel)
+        self.assertEqual(resolve(url).func.view_class, UserPanel)
 
     def test_api_user_register(self):
         url = reverse('accounts:api_user_register')
